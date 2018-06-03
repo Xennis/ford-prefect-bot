@@ -6,12 +6,14 @@ import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 
 service TelegramBotApi {
-    rpc UpdatesHook (google.protobuf.Empty) returns (UpdatesResponse) {
-        option (google.api.http) = { post: "/updatesHook" };
+    rpc ReceiveUpdates (Update) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/updatesHook"
+        };
     }
 }
 
-message UpdatesResponse {
+message Updates {
     bool ok = 1;
     repeated Update result = 2;
 }
