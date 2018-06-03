@@ -3,6 +3,6 @@
 [![Build Status](https://travis-ci.org/Xennis/ford-prefect-bot.svg?branch=master)](https://travis-ci.org/Xennis/ford-prefect-bot)
 
 Overview
-* [fort-perfect](fort-perfect/README.md) Golang bot service
+* [ford-perfect](ford-perfect/README.md) Golang bot service
 * [infrastructure](infrastructure/README.md) Setup infrastructure at Google Cloud Platform
 * [telegram-bot-api](telegram-bot-api/README.md) Auto generated Golang Telegram Bot APIc

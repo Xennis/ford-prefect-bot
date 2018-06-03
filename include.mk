@@ -1,7 +1,7 @@
 GCP_PROJECT = hacker-playground
 GCP_ZONE = europe-west3-b
 
-KUBERNETES_CLUSTER = fort-perfect-cluster
+KUBERNETES_CLUSTER = ford-perfect-cluster
 KUBERNTES_CONTEXT = gke_$(GCP_PROJECT)_$(GCP_ZONE)_$(KUBERNETES_CLUSTER)
 
 DOCKER_IMAGE = eu.gcr.io/$(GCP_PROJECT)/$(SERVICE_NAME)
