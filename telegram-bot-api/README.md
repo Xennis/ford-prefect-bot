@@ -1,5 +1,7 @@
 # Golang Telegram Bot API
 
+## Development
+
 The Golang Telegram Bot API is auto generated from the .proto file. To rerun the generation execute `make compileProtocolBuffers`.
 
 A requirement is, that the environment variable `GOOGLEAPIS_DIR` points to the diretory of the public interface definitions of Google APIs:
@@ -8,3 +10,7 @@ A requirement is, that the environment variable `GOOGLEAPIS_DIR` points to the d
 export GOOGLEAPIS_DIR=~/path/to/googleapis
 git clone https://github.com/googleapis/googleapis $GOOGLEAPIS_DIR
 ```
+
+## Deployment @ GCP
+
+Deploy the service as GCP endpoint by executing: `make gcpDeployEndpoint`.

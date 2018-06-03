@@ -14,13 +14,6 @@ dockerPush: dockerBuild
 	@echo "Build and push Docker images to GCP project"
 	docker push $(DOCKER_IMAGE)
 
-dockerRun: dockerBuild
-	@echo "Build Docker image and run service inside the Docker container at http://localhost:8080"
-	docker run -it --rm \
-		--publish 8080:8080 \
-		--name $(SERVICE_NAME) \
-		$(DOCKER_IMAGE)
-
 kubernetesApply: dockerPush
 	@echo "Push Docker image and apply Kubernetes resources"
 	kubectl --context $(KUBERNTES_CONTEXT) apply -f .

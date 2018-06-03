@@ -1,5 +1,12 @@
 # FordPerfectBot service
 
+## Development
+
+Run the service by `go run *.go`.
+
+## Deployment @ GCP Kubernetes Engine
+
+First create the Kubernets secrets by running `make kubernetesCreateSecrets`. Than create the docker image, push it to the Docker registry and apply the Kubernetes resources by executing `make kubernetesApply`.
 
 ## Notes
 
