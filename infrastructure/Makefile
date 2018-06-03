@@ -1,5 +1,6 @@
 include ../include.mk
 
+create: createCluster getCredentials
 
 createCluster:
 	@echo "Create a Kubernetes cluster"
