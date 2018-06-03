@@ -4,6 +4,9 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	pb "github.com/Xennis/ford-prefect-bot/telegram-bot-api"
 	"google.golang.org/grpc"
@@ -13,6 +16,12 @@ import (
 type server struct{}
 
 func main() {
+	log.Printf("Start service")
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	go listenSignals(sigs)
+
 	errRPC := make(chan error)
 	errHTTP := make(chan error)
 	go listenRPC(errRPC)
@@ -24,6 +33,12 @@ func main() {
 	case err := <-errHTTP:
 		log.Fatalf("Exited http with error: %s", err.Error())
 	}
+}
+
+func listenSignals(sigs chan os.Signal) {
+	sig := <-sigs
+	log.Printf("Exit service: %v\n", sig)
+	os.Exit(1)
 }
 
 func listenRPC(errChan chan error) {
