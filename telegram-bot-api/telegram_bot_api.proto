@@ -27,7 +27,7 @@ message Message {
     int32 message_id = 1;
     User from = 2;
     Chat User = 3;
-    string date = 4;
+    int32 date = 4;
     string text = 5;
 }
 
@@ -37,7 +37,6 @@ message User {
     string first_name = 3;
     string last_name = 4;
     string username = 5;
-    string language_code = 6;
 }
 
 message Chat {
