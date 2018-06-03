@@ -26,7 +26,7 @@ message Update {
 message Message {
     int32 message_id = 1;
     User from = 2;
-    Chat User = 3;
+    Chat chat = 3;
     int32 date = 4;
     string text = 5;
 }
