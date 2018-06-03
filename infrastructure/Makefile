@@ -11,6 +11,14 @@ createCluster:
 		--num-nodes "2" \
 		--preemptible 
 
+deleteCluster:
+	@echo "Delete the Kubernetes cluster"
+	gcloud container --project $(GCP_PROJECT) clusters delete fort-perfect-cluster
+
 getCredentials:
 	@echo "Get credentials of the cluster"
 	gcloud container clusters get-credentials $(KUBERNETES_CLUSTER)
+
+deleteCredentials:
+	@echo "Delete kubectl context"
+	kubectl config delete-context $(KUBERNTES_CONTEXT)
