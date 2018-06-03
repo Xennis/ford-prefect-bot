@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	pb "github.com/Xennis/ford-prefect-bot/telegram-bot-api"
@@ -18,6 +18,6 @@ func livenessProbeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) ReceiveUpdates(ctx context.Context, in *pb.Update) (*empty.Empty, error) {
-	fmt.Printf("Receive update: %v", in.UpdateId)
+	log.Printf("Receive update: %v\n", in.UpdateId)
 	return new(empty.Empty), nil
 }

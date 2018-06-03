@@ -17,7 +17,7 @@ deleteCluster:
 
 getCredentials:
 	@echo "Get credentials of the cluster"
-	gcloud container clusters get-credentials $(KUBERNETES_CLUSTER)
+	gcloud container --project $(GCP_PROJECT)  clusters get-credentials $(KUBERNETES_CLUSTER)
 
 deleteCredentials:
 	@echo "Delete kubectl context"
