@@ -1,3 +1,11 @@
-# Google Cloud Platform infrastructure
+# Infrastructure
 
-Setup the infrastructure at Google Cloud Platform (GCP) by execute `make create`.
+
+## Google Cloud Platform infrastructure
+
+Setup the infrastructure at Google Cloud Platform (GCP) by executing
+
+```sh
+cd gcp
+make create
+```
