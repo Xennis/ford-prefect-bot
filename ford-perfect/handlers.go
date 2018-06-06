@@ -19,5 +19,14 @@ func livenessProbeHandler(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) ReceiveUpdates(ctx context.Context, in *pb.Update) (*empty.Empty, error) {
 	log.Printf("Receive update: %v\n", in.UpdateId)
+	m := in.Message
+	if m == nil {
+		return new(empty.Empty), nil
+	}
+
+	c := m.Chat
+	if c != nil {
+		log.Printf("Chat id: %v\n", c.Id)
+	}
 	return new(empty.Empty), nil
 }
