@@ -1,4 +1,4 @@
-include ../../include.mk
+include ../include.mk
 
 create: createCluster getCredentials
 

@@ -1,33 +1,21 @@
 steps:
-- name: 'gcr.io/cloud-builders/go'
-  args: ['get', '-t',  '-v', './...']
-  env: ['PROJECT_ROOT=github.com/Xennis/ford-prefect-bot']
-- name: 'gcr.io/cloud-builders/go'
-  args: ['test', 'github.com/Xennis/ford-prefect-bot/ford-perfect']
-  env: ['PROJECT_ROOT=github.com/Xennis/ford-prefect-bot']
-- name: 'gcr.io/cloud-builders/go'
-  args: ['build', '-o', 'service', 'github.com/Xennis/ford-prefect-bot/ford-perfect']
-  env: [
-    'PROJECT_ROOT=github.com/Xennis/ford-prefect-bot',
-    'GOOS=linux'
-  ]
-- name: 'alpine'
-  args: ['cp', 'infrastructure/dockerfile/Dockerfile', '.']
-- name: 'alpine'
-  args: ['cp', 'infrastructure/dockerfile/ca-certificates.crt', '.']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '--tag=eu.gcr.io/$PROJECT_ID/ford-perfect', '--tag=eu.gcr.io/$PROJECT_ID/ford-perfect:$SHORT_SHA', '.']
+  dir: ford-perfect
 - name: 'gcr.io/cloud-builders/kubectl'
-  args: ['get', 'pods']
+  args: ['--namespace', '${_NAMESPACE}', 'apply', '-f', '.']
   env:
-  - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-b'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=ford-perfect-cluster'
+  - 'CLOUDSDK_COMPUTE_ZONE=${_COMPUTE_ZONE}'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=${_CONTAINER_CLUSTER}'
+  dir: ford-perfect
 - name: 'gcr.io/cloud-builders/kubectl'
-  args: ['set', 'image', 'deployment/ford-perfect-deployment', 'ford-perfect-app=eu.gcr.io/$PROJECT_ID/ford-perfect:$SHORT_SHA']
+  args: ['--namespace', '${_NAMESPACE}', 'set', 'image', 'deployment/ford-perfect-deployment', 'ford-perfect-app=eu.gcr.io/$PROJECT_ID/ford-perfect:$SHORT_SHA']
   env:
-  - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-b'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=ford-perfect-cluster'
-#$ export GOPATH=$HOME/gopath
-
-tags: ['latest', '$SHORT_SHA']
+  - 'CLOUDSDK_COMPUTE_ZONE=${_COMPUTE_ZONE}'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=${_CONTAINER_CLUSTER}'
 images: ['eu.gcr.io/$PROJECT_ID/ford-perfect']
+tags: ['$SHORT_SHA']
+substitutions:
+  _COMPUTE_ZONE: europe-west3-b
+  _CONTAINER_CLUSTER: ford-perfect-cluster
+  _NAMESPACE: default
