@@ -1,6 +1,10 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+
+	"go.opencensus.io/plugin/ochttp"
+)
 
 func createHTTPHandler() http.Handler {
 	mux := http.NewServeMux()
@@ -12,5 +16,5 @@ func createHTTPHandler() http.Handler {
 func createHTTPSHalder(token string) http.Handler {
 	mux := http.NewServeMux()
 	mux.Handle("/updatesHook"+token, updatesHookHandler())
-	return mux
+	return &ochttp.Handler{Handler: mux}
 }

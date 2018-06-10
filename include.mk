@@ -8,7 +8,10 @@ KUBERNTES_CONTEXT = gke_$(GCP_PROJECT)_$(GCP_ZONE)_$(KUBERNETES_CLUSTER)
 SERVICE_VERSION = $(shell git rev-parse --short HEAD)
 
 gcpContainerBuild:
-	gcloud --project $(GCP_PROJECT) container builds submit \
+	gcloud container --project $(GCP_PROJECT) builds submit \
 		--config ../cloudbuild.yaml \
 		--substitutions SHORT_SHA=$(SERVICE_VERSION),_COMPUTE_ZONE=$(GCP_ZONE),_CONTAINER_CLUSTER=$(KUBERNETES_CLUSTER) \
 		../
+
+gcpBuildStatus:
+	gcloud container --project $(GCP_PROJECT) builds list --filter "tags=$(SERVICE_VERSION)"
