@@ -2,18 +2,13 @@ package main
 
 import (
 	"log"
-	"net"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
-	pb "github.com/Xennis/ford-prefect-bot/telegram-bot-api"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
-
-type server struct{}
 
 func main() {
 	log.Printf("Start service")
@@ -22,40 +17,19 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	go listenSignals(sigs)
 
-	errRPC := make(chan error)
-	errHTTP := make(chan error)
-	go listenRPC(errRPC)
-	go listenHTTP(errHTTP)
-
-	select {
-	case err := <-errRPC:
-		log.Fatalf("Exited rpc with error: %s", err.Error())
-	case err := <-errHTTP:
-		log.Fatalf("Exited http with error: %s", err.Error())
+	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_API_TOKEN"))
+	if err != nil {
+		log.Fatal(err)
 	}
+	bot.Debug = true
+	log.Printf("Authorized on account %s", bot.Self.UserName)
+
+	handler := createHandler()
+	log.Fatal(http.ListenAndServeTLS(":8443", "/etc/nginx/ssl/nginx.crt", "/etc/nginx/ssl/nginx.key", handler))
 }
 
 func listenSignals(sigs chan os.Signal) {
 	sig := <-sigs
 	log.Printf("Exit service: %v\n", sig)
 	os.Exit(1)
-}
-
-func listenRPC(errChan chan error) {
-	lis, err := net.Listen("tcp", ":50051")
-	if err != nil {
-		errChan <- err
-		return
-	}
-	s := grpc.NewServer()
-	pb.RegisterTelegramBotApiServer(s, &server{})
-	reflection.Register(s) // Register reflection service on gRPC server.
-	errChan <- s.Serve(lis)
-}
-
-func listenHTTP(errchan chan error) {
-	mux := http.NewServeMux()
-	mux.Handle("/ready", http.HandlerFunc(readinessProbeHandler))
-	mux.Handle("/healthz", http.HandlerFunc(livenessProbeHandler))
-	errchan <- http.ListenAndServe(":8080", mux)
 }

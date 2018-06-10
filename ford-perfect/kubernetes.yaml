@@ -4,13 +4,9 @@ metadata:
   name: ford-perfect-service
 spec:
   ports:
-    - port: 80
-      targetPort: 8080
-      protocol: TCP
-      name: http
     - port: 443
+      targetPort: 8443
       protocol: TCP
-      name: https
   selector:
     app: ford-perfect-app
   type: LoadBalancer
@@ -29,20 +25,25 @@ spec:
       containers:
       - name: ford-perfect-app
         image: eu.gcr.io/hacker-playground/ford-perfect
-        imagePullPolicy: Always
         ports:
-        - name: http-port
-          containerPort: 8080
-        - name: rpc-port
-          containerPort: 50051
+        - name: https-port
+          containerPort: 8443
+        env:
+        - name: TELEGRAM_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: telegram-api-credentials
+              key: token
         readinessProbe:
           httpGet:
             path: /ready
-            port: http-port
+            port: https-port
+            scheme: HTTPS
         livenessProbe:
           httpGet:
             path: /healthz
-            port: http-port
+            port: https-port
+            scheme: HTTPS
         resources:
           requests:
             memory: "64Mi"
@@ -50,16 +51,6 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
-      - name: esp
-        image: gcr.io/endpoints-release/endpoints-runtime:1
-        args: [
-          "--ssl_port", "443",
-          "--backend", "grpc://127.0.0.1:50051",
-          "--service", "telegrambotapi.endpoints.hacker-playground.cloud.goog",
-          "--rollout_strategy", "managed",
-        ]
-        ports:
-          - containerPort: 443
         volumeMounts:
           - mountPath: /etc/nginx/ssl
             name: nginx-ssl
