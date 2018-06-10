@@ -28,7 +28,7 @@ kubernetesDeleteTelegramApiCredentialsSecret:
 
 telegramSetWebhook:
 	#export SERVICE_IP=$(kubectl get services ford-perfect-service -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-	curl -F "url=https://$(SERVICE_IP)/updatesHook" -F "certificate=@$(CRT_FILE)" https://api.telegram.org/bot$(TELEGRAM_API_TOKEN)/setWebhook
+	curl -F "url=https://$(SERVICE_IP)/updatesHook$(TELEGRAM_API_TOKEN)" -F "certificate=@$(CRT_FILE)" https://api.telegram.org/bot$(TELEGRAM_API_TOKEN)/setWebhook
 
 telegramDeleteWebhook:
 	curl https://api.telegram.org/bot$(TELEGRAM_API_TOKEN)/deleteWebhook

@@ -2,11 +2,15 @@ package main
 
 import "net/http"
 
-func createHandler() http.Handler {
+func createHTTPHandler() http.Handler {
 	mux := http.NewServeMux()
-	mux.Handle("/ready", http.HandlerFunc(readinessProbeHandler))
-	mux.Handle("/healthz", http.HandlerFunc(livenessProbeHandler))
-	// TODO: append bot.Token
-	mux.Handle("/updatesHook", http.HandlerFunc(updatesHookHandler))
+	mux.Handle("/ready", readinessProbeHandler())
+	mux.Handle("/healthz", livenessProbeHandler())
+	return mux
+}
+
+func createHTTPSHalder(token string) http.Handler {
+	mux := http.NewServeMux()
+	mux.Handle("/updatesHook"+token, updatesHookHandler())
 	return mux
 }

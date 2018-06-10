@@ -26,6 +26,8 @@ spec:
       - name: ford-perfect-app
         image: eu.gcr.io/hacker-playground/ford-perfect
         ports:
+        - name: http-port
+          containerPort: 8080
         - name: https-port
           containerPort: 8443
         env:
@@ -37,13 +39,11 @@ spec:
         readinessProbe:
           httpGet:
             path: /ready
-            port: https-port
-            scheme: HTTPS
+            port: http-port
         livenessProbe:
           httpGet:
             path: /healthz
-            port: https-port
-            scheme: HTTPS
+            port: http-port
         resources:
           requests:
             memory: "64Mi"
